@@ -1,0 +1,15 @@
+{
+  "name": "ext-redirect-app",
+  "version": "1.0.0",
+  "description": "Check code for redirection at https://auth0.com/docs/customize/actions/flows-and-triggers/login-flow/redirect-with-actions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jws": "^4.0.0",
+    "querystring": "^0.2.1"
+  }
+}
