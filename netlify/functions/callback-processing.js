@@ -4,14 +4,15 @@ var sign = require('jws').sign;
 var parse = require('querystring').parse;
 const secret = "this-is-a-very-secret-token";
 
-function processFormData(request, contentType, callback) {
+function processFormData(request, callback) {
     const FORM_URLENCODED = 'application/x-www-form-urlencoded';
-    if(contentType === FORM_URLENCODED) {
+    console.log(JSON.stringify(request));
+    if(request.headers.content-type === FORM_URLENCODED) {
         let body = '';
-        request.on('data', chunk => {
+        request.body.on('data', chunk => {
             body += chunk.toString();
         });
-        request.on('end', () => {
+        request.body.on('end', () => {
             callback(parse(body));
         });
     }
@@ -36,7 +37,7 @@ exports.handler = async (event, context) => {
     }
 
     if(event.httpMethod === 'POST') {
-        processFormData(event.body, event.headers.content-type, result => {
+        processFormData(event, result => {
             console.log(result);
             const issuedAt = Math.floor(Date.now() / 1000);
             const payload =  {
