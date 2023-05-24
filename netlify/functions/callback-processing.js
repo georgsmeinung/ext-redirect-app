@@ -7,6 +7,7 @@ const secret = "this-is-a-very-secret-token";
 function processFormData(event, callback) {
     const FORM_URLENCODED = 'application/x-www-form-urlencoded';
     const reqBody = event.body;
+    console.log(JSON.stringify(event));
     if(event.headers["content-type"] === FORM_URLENCODED) {
         let body = '';
         reqBody.on('data', chunk => {
