@@ -4,9 +4,9 @@ var sign = require('jws').sign;
 var parse = require('querystring').parse;
 const secret = "this-is-a-very-secret-token";
 
-function processFormData(request, callback) {
+function processFormData(request, contentType, callback) {
     const FORM_URLENCODED = 'application/x-www-form-urlencoded';
-    if(request.headers['content-type'] === FORM_URLENCODED) {
+    if(contentType === FORM_URLENCODED) {
         let body = '';
         request.on('data', chunk => {
             body += chunk.toString();
@@ -36,7 +36,7 @@ exports.handler = async (event, context) => {
     }
 
     if(event.httpMethod === 'POST') {
-        processFormData(event.body, result => {
+        processFormData(event.body, event.headers.content-type, result => {
             console.log(result);
             const issuedAt = Math.floor(Date.now() / 1000);
             const payload =  {
