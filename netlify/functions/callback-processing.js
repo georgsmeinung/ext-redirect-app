@@ -8,10 +8,10 @@ function processFormData(event, callback) {
     const FORM_URLENCODED = 'application/x-www-form-urlencoded';
     if(event.headers["content-type"] === FORM_URLENCODED) {
         let body = '';
-        request.body.on('data', chunk => {
+        event.body.on('data', chunk => {
             body += chunk.toString();
         });
-        request.body.on('end', () => {
+        event.body.on('end', () => {
             callback(parse(body));
         });
     }
