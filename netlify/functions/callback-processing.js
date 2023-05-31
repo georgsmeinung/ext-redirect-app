@@ -4,6 +4,7 @@ var sign = require('jws').sign;
 var parse = require('querystring').parse;
 const secret = "this-is-a-very-secret-token";
 
+/*
 function processFormData(event, callback) {
     const FORM_URLENCODED = 'application/x-www-form-urlencoded';
     const reqBody = event.body;
@@ -21,6 +22,7 @@ function processFormData(event, callback) {
         callback(null);
     }
 }
+*/
 
 exports.handler = async (event, context) => {
     redirect_uri = event.queryStringParameters.redirect_uri;
@@ -38,33 +40,30 @@ exports.handler = async (event, context) => {
     }
 
     if(event.httpMethod === 'POST') {
-        processFormData(event, result => {
-            console.log(result);
-            const issuedAt = Math.floor(Date.now() / 1000);
-            const payload =  {
-                ...decoded.payload,
-                state,
-                iat: issuedAt,
-                exp: issuedAt + (60 * 5), // five minutes
-            }
-            
-            const responseToken = sign({
-                header: {
-                    alg: 'HS256',
-                    typ: 'JWT',
-                },
-                encoding: 'utf-8',
-                payload,
-                secret,
-            });
-            
-            return {
-                "statusCode": 302,
-                "headers": {
-                    "Location": `${redirect_uri}?state=${state}&session_token=${responseToken}`
-                }
-            }
+        const issuedAt = Math.floor(Date.now() / 1000);
+        const payload =  {
+            ...decoded.payload,
+            state,
+            iat: issuedAt,
+            exp: issuedAt + (60 * 5), // five minutes
+        }
+        
+        const responseToken = sign({
+            header: {
+                alg: 'HS256',
+                typ: 'JWT',
+            },
+            encoding: 'utf-8',
+            payload,
+            secret,
         });
+        
+        return {
+            "statusCode": 302,
+            "headers": {
+                "Location": `${redirect_uri}?state=${state}&session_token=${responseToken}`
+            }
+        }
     } else {
         return {
             "statusCode": 501,
@@ -72,8 +71,11 @@ exports.handler = async (event, context) => {
         }
     }
 
+/*
     return {
         statusCode: 200,
         body: 'Hello, World!'
     };
+*/
+
 };
